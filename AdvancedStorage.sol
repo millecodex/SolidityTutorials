@@ -9,6 +9,8 @@ contract AdvancedStorage {
         ids.push(id);
     }
     
+    //this get function isn't strickly required because solidity
+    //creates a getter function when the array is instantiated
     function get(uint position) view public returns(uint) {
         return ids[position];
     }
