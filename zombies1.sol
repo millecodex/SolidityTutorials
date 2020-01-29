@@ -14,9 +14,16 @@ contract ZombieFactory {
 
     Zombie[] public zombies;
 
-    function _createZombie(string memory _name, uint _dna) private {
+    //mappings are key-value stores
+    mapping (uint => address) public zombieToOwner;
+    mapping (address => uint) ownerZombieCount;
+
+    function _createZombie(string memory _name, uint _dna) internal {
         // and fire it here
         uint id = zombies.push(Zombie(_name, _dna))-1;
+        //msg.sender refers to the caller's address
+        zombieToOwner[id] = msg.sender;
+        ownerZombieCount[msg.sender]++;
         emit NewZombie(id,_name,_dna);
     } 
 
@@ -26,8 +33,9 @@ contract ZombieFactory {
     }
 
     function createRandomZombie(string memory _name) public {
+        //`require' keyword is a test that throws an error if it fails
+        require(ownerZombieCount[msg.sender] == 0);
         uint randDna = _generateRandomDna(_name);
         _createZombie(_name, randDna);
     }
-
 }
