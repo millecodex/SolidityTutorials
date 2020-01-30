@@ -1,6 +1,8 @@
 pragma solidity >=0.5.0 <0.6.0;
 
-contract ZombieFactory {
+import "./ownable.sol"
+
+contract ZombieFactory is Ownable{
 
     // declare our event here
     event NewZombie(uint zombieId, string name, uint dna);
@@ -10,6 +12,8 @@ contract ZombieFactory {
     struct Zombie {
         string name;
         uint dna;
+        uint32 level;
+        uint32 readyTime;
     }
 
     Zombie[] public zombies;
@@ -20,7 +24,7 @@ contract ZombieFactory {
 
     function _createZombie(string memory _name, uint _dna) internal {
         // and fire it here
-        uint id = zombies.push(Zombie(_name, _dna))-1;
+        uint id = zombies.push(Zombie(_name, _dna,1,uint32(now + cooldownTime)))-1;
         //msg.sender refers to the caller's address
         zombieToOwner[id] = msg.sender;
         ownerZombieCount[msg.sender]++;
