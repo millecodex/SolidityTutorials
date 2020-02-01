@@ -22,6 +22,12 @@ contract KittyInterface {
 // contract inheritance with `is' keyword
 contract ZombieFeeding is ZombieFactory {
 
+    //modifier to require caller to be owner of zombie
+    modifier ownerOf(uint _zombieId) {
+      require(msg.sender == zombieToOwner[_zombieId]);
+      _;
+    }
+
     //the cryptoKitties contract address
     //this is hard-coded, not the best idea
     //address ckAddress = 0x06012c8cf97BEaD5deAe237070F9587f8E7A266d;
