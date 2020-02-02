@@ -23,7 +23,7 @@ contract KittyInterface {
 contract ZombieFeeding is ZombieFactory {
 
     //modifier to require caller to be owner of zombie
-    modifier ownerOf(uint _zombieId) {
+    modifier onlyOwnerOf(uint _zombieId) {
       require(msg.sender == zombieToOwner[_zombieId]);
       _;
     }
@@ -44,13 +44,11 @@ contract ZombieFeeding is ZombieFactory {
         return (_zombie.readyTime <= now);
     }
 
-    function feedAndMultiply(uint _zombieId, uint _targetDna, string memory _species) public {
-        //check its our zombie to feed
-        require(msg.sender == zombieToOwner[_zombieId]);
-        //set pointer to the zombies Array location ID
+    function feedAndMultiply(uint _zombieId, uint _targetDna, string memory _species) internal onlyOwnerOf(_zombieId) {
+       //set pointer to the zombies Array location ID
         Zombie storage myZombie = zombies[_zombieId];
         //check we're ready to feed
-        require(_isReady(myZombie));
+      require(_isReady(myZombie));
          _targetDna = _targetDna % dnaModulus;
         uint newDna = (myZombie.dna + _targetDna) / 2;
         // Add an if statement here to check if its a kitty
